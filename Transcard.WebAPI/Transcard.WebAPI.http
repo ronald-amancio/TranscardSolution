@@ -1,0 +1,6 @@
+@Transcard.WebAPI_HostAddress = http://localhost:5276
+
+GET {{Transcard.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

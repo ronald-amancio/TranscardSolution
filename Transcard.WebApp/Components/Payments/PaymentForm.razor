@@ -1,0 +1,44 @@
+﻿@using Transcard.WebApp.Services
+
+<h3>PaymentForm</h3>
+
+@inject IPaymentClient PaymentClient
+
+<EditForm Model="_model" OnValidSubmit="SubmitAsync">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label>Amount</label>
+        <InputNumber class="form-control" @bind-Value="_model.Amount" />
+    </div>
+
+    <div class="mb-3">
+        <label>Currency</label>
+        <InputText class="form-control" @bind-Value="_model.Currency" />
+    </div>
+
+    <div class="mb-3">
+        <label>Reference ID</label>
+        <InputText class="form-control" @bind-Value="_model.ReferenceId" />
+    </div>
+
+    <button class="btn btn-primary" disabled="@_loading">
+        @(_loading ? "Processing..." : "Submit Payment")
+    </button>
+</EditForm>
+
+@if (_loading)
+{
+    <div class="spinner-border mt-3"></div>
+}
+
+@if (_error != null)
+{
+    <div class="alert alert-danger mt-3">@_error</div>
+}
+
+@if (_success != null)
+{
+    <div class="alert alert-success mt-3">@_success</div>
+}

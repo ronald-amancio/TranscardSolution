@@ -1,0 +1,90 @@
+﻿@using Transcard.Application.DTOs
+@using Transcard.WebApp.Services
+@using Microsoft.AspNetCore.Components.Forms
+
+@inject IPaymentClient PaymentClient
+
+@* <PageTitle>Payments</PageTitle> *@
+
+<div class="container min-vh-100 d-flex align-items-center justify-content-center bg-light">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+
+        <div class="card shadow-lg border-0">
+            <div class="card-body p-4">
+
+                <div class="text-center mb-4">
+                    <h4 class="fw-bold">Payment Processing</h4>
+                    <p class="text-muted small">Secure internal transaction</p>
+                </div>
+
+                <EditForm EditContext="_editContext"
+                          OnValidSubmit="SubmitAsync"
+                          OnInvalidSubmit="HandleInvalidSubmit">
+                    <DataAnnotationsValidator />
+
+                    <!-- Amount -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Amount</label>
+                        <InputNumber class="@($"form-control form-control-lg {FieldCss(() => _model.Amount)}")"
+                                     @bind-Value="_model.Amount" />
+                        <ValidationMessage For="@(() => _model.Amount)" />
+                    </div>
+
+                    <!-- Currency -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Currency</label>
+                        <InputSelect class="@($"form-select form-select-lg {FieldCss(() => _model.Currency)}")"
+                                     @bind-Value="_model.Currency">
+                            <option value="">-- Select Currency --</option>
+                            @foreach (var currency in _currencies)
+                            {
+                                <option value="@currency">@currency</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => _model.Currency)" />
+                    </div>
+
+                    <!-- Reference -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Reference ID</label>
+                        <InputText class="@($"form-control form-control-lg {FieldCss(() => _model.ReferenceId)}")"
+                                   @bind-Value="_model.ReferenceId" />
+                        <ValidationMessage For="@(() => _model.ReferenceId)" />
+                    </div>
+
+                    <div class="d-grid">
+                        <button class="btn btn-primary btn-lg"
+                                disabled="@(!_editContext.Validate() || _loading)">
+                            @(_loading ? "Processing..." : "Submit Payment")
+                        </button>
+                    </div>
+
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+@if (_toastMessage != null)
+{
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div class="toast show align-items-center text-white @( _toastSuccess ? "bg-success" : "bg-danger") border-0">
+            <div class="d-flex">
+                <div class="toast-body">
+                    @_toastMessage
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Success Animation -->
+@* @if (_showSuccessAnimation)
+{
+    <div class="success-overlay">
+        <div class="checkmark-circle">
+            ✓
+        </div>
+    </div>
+} *@

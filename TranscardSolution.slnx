@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="Transcard.Application/Transcard.Application.csproj" />
+    <Project Path="Transcard.Domain/Transcard.Domain.csproj" />
+    <Project Path="Transcard.Infrastructure/Transcard.Infrastructure.csproj" />
+    <Project Path="Transcard.Shared/Transcard.Shared.csproj" />
+    <Project Path="Transcard.WebAPI/Transcard.WebAPI.csproj" />
+    <Project Path="Transcard.WebApp/Transcard.WebApp.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="Transcard.UnitTests/Transcard.UnitTests.csproj" />
+  </Folder>
+</Solution>
