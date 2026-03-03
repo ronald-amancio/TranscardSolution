@@ -1,4 +1,8 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
+@using Transcard.WebApp.Pages.Account
+
+@attribute [Authorize]
 
 @* <PageTitle>Home</PageTitle>
 
@@ -6,4 +10,5 @@
 
 Welcome to your new app. *@
 
-<PaymentForm />
+<Login />
+@* <PaymentForm /> *@

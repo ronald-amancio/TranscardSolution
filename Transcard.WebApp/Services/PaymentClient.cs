@@ -14,6 +14,7 @@ namespace Transcard.WebApp.Services
 
         public async Task<PaymentResponseDto> SubmitAsync(PaymentRequestDto request)
         {
+            //var response = await _httpClient.PostAsJsonAsync("https://localhost:7058/api/payments", request);
             var response = await _httpClient.PostAsJsonAsync("api/payments", request);
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)

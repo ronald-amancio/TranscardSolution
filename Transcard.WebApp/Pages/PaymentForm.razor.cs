@@ -3,60 +3,62 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using System.Linq.Expressions;
 using Transcard.Application.DTOs;
+using Transcard.Application.Interfaces;
+using Transcard.WebApp.Services;
 
 namespace Transcard.WebApp.Pages
 {
-    public partial class PaymentForm
+    public partial class PaymentForm : ComponentBase
     {
         [Inject] private IJSRuntime JS { get; set; } = default!;
+        [Inject] private NavigationManager Nav { get; set; } = default!;
+        [Inject] private IPaymentService PaymentService { get; set; } = default!;
+        [Inject] private NotificationService NotificationService { get; set; } = default!;
 
-        private PaymentRequestDto _model = new();
-        private EditContext _editContext = default!;
+        //[Parameter] public EventCallback<PaymentRequestDto> OnSaved { get; set; }
+
+        [SupplyParameterFromForm]
+        private PaymentRequestDto _model { get; set; } = new();
         private bool _loading;
-        private string? _toastMessage;
-        private bool _toastSuccess;
-        //private bool _showSuccessAnimation;
         private bool _submitted;
 
-        private List<string> _currencies = new()
-        {
-            "USD",
-            "EUR",
-            "PHP",
-            "GBP",
-            "AUD"
-        };
+        private string? _toastMessage;
+        private bool _toastSuccess;
+        private bool _showSuccessAnimation;
 
-        protected override void OnInitialized()
+        private readonly List<string> _currencies = new()
         {
-            _editContext = new EditContext(_model);
-        }
+            "USD", "EUR", "PHP", "GBP", "AUD"
+        };
 
         private async Task SubmitAsync()
         {
+            _loading = true;
+
             try
             {
-                _loading = true;
-
-                var result = await PaymentClient.SubmitAsync(_model);
-
-                ShowToast("Payment successful", true);
-                //ShowSuccessAnimation();
+                var result = await PaymentService.SubmitAsync(_model);
+                NotificationService.ShowSuccess($"Your payment has been successfully posted. Payment ID: {result.PaymentId}");
+                ShowToast($"Your payment has been successfully posted.", true);
+                ShowSuccessAnimation();
 
                 _model = new();
-                _editContext = new EditContext(_model);
+                _submitted = false;
+                //StateHasChanged();
             }
             catch (UnauthorizedAccessException)
             {
-                ShowToast("Session expired. Please login again.", false);
+                NotificationService.ShowError("Session expired.");
+                Nav.NavigateTo("/login");
             }
-            catch
+            catch (Exception)
             {
-                ShowToast("Unable to process payment.", false);
+                NotificationService.ShowError("Unable to process payment.");
             }
             finally
             {
                 _loading = false;
+                StateHasChanged();
             }
         }
 
@@ -72,41 +74,23 @@ namespace Transcard.WebApp.Pages
             });
         }
 
-        //private void ShowSuccessAnimation()
-        //{
-        //    _showSuccessAnimation = true;
-
-        //    Task.Delay(1500).ContinueWith(_ =>
-        //    {
-        //        _showSuccessAnimation = false;
-        //        InvokeAsync(StateHasChanged);
-        //    });
-        //}
-
-        private async Task FocusFirstInvalidField()
+        private void ShowSuccessAnimation()
         {
-            await JS.InvokeVoidAsync("focusFirstInvalid");
+            _showSuccessAnimation = true;
+
+            Task.Delay(1500).ContinueWith(_ =>
+            {
+                _showSuccessAnimation = false;
+                InvokeAsync(StateHasChanged);
+            });
         }
 
-        private async void HandleInvalidSubmit(EditContext context)
+        private async Task HandleInvalidSubmit()
         {
             _submitted = true;
 
-            ShowToast("Please correct the highlighted fields.", false);
-
-            await FocusFirstInvalidField();
-        }
-
-        private string FieldCss(Expression<Func<object>> accessor)
-        {
-            if (!_submitted)
-                return string.Empty;
-
-            var field = FieldIdentifier.Create(accessor);
-
-            return _editContext.GetValidationMessages(field).Any()
-                ? "is-invalid"
-                : "is-valid";
+            NotificationService.ShowError("Please correct the highlighted fields.");
+            StateHasChanged();
         }
     }
 }

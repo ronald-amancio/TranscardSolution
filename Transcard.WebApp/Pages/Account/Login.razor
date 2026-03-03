@@ -1,0 +1,24 @@
+﻿@page "/login"
+
+<h3>Login</h3>
+
+<form method="post" action="/auth/login" class="card p-4">
+    <div class="mb-3">
+        <label>Username</label>
+        <input name="Username" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Password</label>
+        <input name="Password" type="password" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Login
+    </button>
+</form>
+
+@if (_error != null)
+{
+    <div class="alert alert-danger mt-3">@_error</div>
+}

@@ -68,7 +68,7 @@ body {
         background-color: #162f6a;
     }
 
-/*.success-overlay {
+.success-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -79,9 +79,9 @@ body {
     justify-content: center;
     align-items: center;
     animation: fadeIn 0.3s ease-in-out;
-}*/
+}
 
-/*.checkmark-circle {
+.checkmark-circle {
     width: 100px;
     height: 100px;
     background: #28a745;
@@ -92,7 +92,7 @@ body {
     justify-content: center;
     align-items: center;
     animation: scaleIn 0.4s ease-in-out;
-}*/
+}
 
 @keyframes scaleIn {
     from {
@@ -101,5 +101,34 @@ body {
 
     to {
         transform: scale(1);
+    }
+}
+
+/* Toast */
+.toast {
+    opacity: 1;
+    transition: opacity 0.4s ease-in-out;
+}
+
+/* Logo */
+.brand-logo {
+    height: 1.6rem; /* Matches navbar text size */
+    width: auto;
+    object-fit: contain;
+}
+
+.brand-text {
+    font-size: 1.25rem; /* Matches Bootstrap navbar brand size */
+    line-height: 1;
+}
+
+/* Responsive scaling */
+@media (max-width: 576px) {
+    .brand-logo {
+        height: 1.4rem;
+    }
+
+    .brand-text {
+        font-size: 1.1rem;
     }
 }

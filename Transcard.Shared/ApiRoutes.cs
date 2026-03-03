@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Transcard.Shared
 {
-    internal class ApiRoutes
+    public class ApiRoutes
     {
+
     }
 }

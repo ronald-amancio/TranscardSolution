@@ -10,14 +10,13 @@ namespace Transcard.Application.DTOs
     public class PaymentRequestDto
     {
         [Required]
-        [Range(0.01, double.MaxValue)]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than zero.")]
         public decimal Amount { get; set; }
 
         [Required]
         public string Currency { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(50)]
         public string ReferenceId { get; set; } = string.Empty;
     }
 }

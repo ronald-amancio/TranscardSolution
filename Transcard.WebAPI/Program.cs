@@ -1,32 +1,63 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Transcard.Application.Interfaces;
 using Transcard.Application.Services;
 using Transcard.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//
+// =========================
+// APPLICATION SERVICES
+// =========================
+//
+
+// Dependency Injection for Clean Architecture
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 
-builder.Services.AddAuthentication("Cookies")
-    .AddCookie("Cookies", options =>
+//
+// =========================
+// AUTHENTICATION
+// =========================
+//
+
+// Registers cookie authentication handler
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
     {
-        options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Cookie.Name = "Transcard.Auth";
+        options.Cookie.HttpOnly = true; // Prevent JavaScript access
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // HTTPS only
+        options.Cookie.SameSite = SameSiteMode.Strict; // CSRF protection
+
+        options.LoginPath = "/api/auth/unauthorized";
+        options.AccessDeniedPath = "/api/auth/forbidden";
+
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.SlidingExpiration = true;
     });
 
 builder.Services.AddAuthorization();
 
+//
+// =========================
+// CONTROLLERS & SWAGGER
+// =========================
+//
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+//
+// =========================
+// MIDDLEWARE PIPELINE
+// =========================
+//
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -35,6 +66,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Authentication MUST come before Authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

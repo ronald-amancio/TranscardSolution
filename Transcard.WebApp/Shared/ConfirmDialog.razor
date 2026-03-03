@@ -1,0 +1,20 @@
+﻿@if (IsVisible)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" @onclick="HandleBackdropClick">
+        <div class="modal-dialog">
+            <div class="modal-content" @onclick:stopPropagation>
+                <div class="modal-header">
+                    <h5 class="modal-title">@Title</h5>
+                    <button type="button" class="btn-close" @onclick="Cancel"></button>
+                </div>
+                <div class="modal-body">
+                    <p>@Message</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+                    <button class="btn btn-danger" @onclick="Confirm">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

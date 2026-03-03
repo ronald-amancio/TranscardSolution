@@ -17,6 +17,7 @@ namespace Transcard.WebAPI.Controllers
             _paymentService = paymentService;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Submit(PaymentRequestDto request)
         {

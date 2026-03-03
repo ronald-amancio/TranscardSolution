@@ -13,6 +13,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Transcard.Application\Transcard.Application.csproj" />
+    <ProjectReference Include="..\Transcard.Domain\Transcard.Domain.csproj" />
+    <ProjectReference Include="..\Transcard.Infrastructure\Transcard.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\resources\images\" />
   </ItemGroup>
 
 </Project>

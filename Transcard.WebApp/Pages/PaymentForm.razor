@@ -1,10 +1,9 @@
-﻿@using Transcard.Application.DTOs
-@using Transcard.WebApp.Services
+﻿@page "/paymentform"
+@attribute [Authorize]
+
+@using Microsoft.AspNetCore.Authorization
+@using Transcard.Application.DTOs
 @using Microsoft.AspNetCore.Components.Forms
-
-@inject IPaymentClient PaymentClient
-
-@* <PageTitle>Payments</PageTitle> *@
 
 <div class="container min-vh-100 d-flex align-items-center justify-content-center bg-light">
     <div class="col-12 col-sm-10 col-md-8 col-lg-5">
@@ -17,15 +16,18 @@
                     <p class="text-muted small">Secure internal transaction</p>
                 </div>
 
-                <EditForm EditContext="_editContext"
+                <EditForm Model="_model"
                           OnValidSubmit="SubmitAsync"
-                          OnInvalidSubmit="HandleInvalidSubmit">
-                    <DataAnnotationsValidator />
+                          OnInvalidSubmit="HandleInvalidSubmit"
+                          FormName="PaymentForm">
+
+                   <DataAnnotationsValidator />
+                    @*  <ValidationSummary /> *@
 
                     <!-- Amount -->
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Amount</label>
-                        <InputNumber class="@($"form-control form-control-lg {FieldCss(() => _model.Amount)}")"
+                        <InputNumber class="form-control form-control-lg"
                                      @bind-Value="_model.Amount" />
                         <ValidationMessage For="@(() => _model.Amount)" />
                     </div>
@@ -33,7 +35,7 @@
                     <!-- Currency -->
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Currency</label>
-                        <InputSelect class="@($"form-select form-select-lg {FieldCss(() => _model.Currency)}")"
+                        <InputSelect class="form-select form-select-lg"
                                      @bind-Value="_model.Currency">
                             <option value="">-- Select Currency --</option>
                             @foreach (var currency in _currencies)
@@ -47,14 +49,14 @@
                     <!-- Reference -->
                     <div class="mb-4">
                         <label class="form-label fw-semibold">Reference ID</label>
-                        <InputText class="@($"form-control form-control-lg {FieldCss(() => _model.ReferenceId)}")"
+                        <InputText class="form-control form-control-lg"
                                    @bind-Value="_model.ReferenceId" />
                         <ValidationMessage For="@(() => _model.ReferenceId)" />
                     </div>
 
                     <div class="d-grid">
                         <button class="btn btn-primary btn-lg"
-                                disabled="@(!_editContext.Validate() || _loading)">
+                                disabled="@_loading">
                             @(_loading ? "Processing..." : "Submit Payment")
                         </button>
                     </div>
@@ -80,11 +82,11 @@
 }
 
 <!-- Success Animation -->
-@* @if (_showSuccessAnimation)
+@if (_showSuccessAnimation)
 {
     <div class="success-overlay">
         <div class="checkmark-circle">
             ✓
         </div>
     </div>
-} *@
+}
