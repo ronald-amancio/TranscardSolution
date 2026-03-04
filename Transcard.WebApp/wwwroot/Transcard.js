@@ -22,3 +22,12 @@
 
     resetTimer();
 };
+
+window.restartIdleTimer = () => {
+    if (window.idleTimeout) {
+        clearTimeout(window.idleTimeout);
+    }
+    if (window.warningTimeout) {
+        clearTimeout(window.warningTimeout);
+    }
+};

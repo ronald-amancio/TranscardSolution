@@ -13,6 +13,45 @@ namespace Transcard.WebApp.Components.Layout
         private string? _toastMessage;
         private bool _toastSuccess;
         private bool _showSuccessAnimation;
+        private bool _menuOpen;
+        private bool _showSessionWarning;
+
+        private void ToggleMenu()
+        {
+            _menuOpen = !_menuOpen;
+        }
+
+        private string MenuCss =>
+                _menuOpen
+                    ? "mobile-menu show"
+                    : "mobile-menu";
+
+        [JSInvokable]
+        public Task TriggerIdleWarning()
+        {
+            _showSessionWarning = true;
+            StateHasChanged();
+            return Task.CompletedTask;
+        }
+
+        [JSInvokable]
+        public async Task TriggerIdleLogout()
+        {
+            await SessionService.HandleIdleLogout();
+        }
+
+        private async Task ContinueSession()
+        {
+            _showSessionWarning = false;
+
+            await JS.InvokeVoidAsync("restartIdleTimer");
+        }
+
+        private async Task LogoutNow()
+        {
+            _showSessionWarning = false;
+            await SessionService.HandleIdleLogout();
+        }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -25,18 +64,18 @@ namespace Transcard.WebApp.Components.Layout
             }
         }
 
-        [JSInvokable]
-        public async Task TriggerIdleWarning()
-        {
-            await SessionService.HandleIdleWarning();
-        }
+        //[JSInvokable]
+        //public async Task TriggerIdleWarning()
+        //{
+        //    await SessionService.HandleIdleWarning();
+        //}
 
-        [JSInvokable]
-        public async Task TriggerIdleLogout()
-        {
-            ShowToast("You have been logged out.", true);
-            await SessionService.HandleIdleLogout();
-        }
+        //[JSInvokable]
+        //public async Task TriggerIdleLogout()
+        //{
+        //    ShowToast("You have been logged out.", true);
+        //    await SessionService.HandleIdleLogout();
+        //}
 
         private void ShowToast(string message, bool success)
         {

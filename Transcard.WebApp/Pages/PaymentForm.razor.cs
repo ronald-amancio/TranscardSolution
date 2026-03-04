@@ -15,8 +15,6 @@ namespace Transcard.WebApp.Pages
         [Inject] private IPaymentService PaymentService { get; set; } = default!;
         [Inject] private NotificationService NotificationService { get; set; } = default!;
 
-        //[Parameter] public EventCallback<PaymentRequestDto> OnSaved { get; set; }
-
         [SupplyParameterFromForm]
         private PaymentRequestDto _model { get; set; } = new();
         private bool _loading;
@@ -38,13 +36,10 @@ namespace Transcard.WebApp.Pages
             try
             {
                 var result = await PaymentService.SubmitAsync(_model);
-                NotificationService.ShowSuccess($"Your payment has been successfully posted. Payment ID: {result.PaymentId}");
-                ShowToast($"Your payment has been successfully posted.", true);
-                ShowSuccessAnimation();
+                _ = ShowToast("Your payment has been successfully posted.", true);
 
                 _model = new();
                 _submitted = false;
-                //StateHasChanged();
             }
             catch (UnauthorizedAccessException)
             {
@@ -58,31 +53,22 @@ namespace Transcard.WebApp.Pages
             finally
             {
                 _loading = false;
-                StateHasChanged();
+                await InvokeAsync(StateHasChanged);
             }
         }
 
-        private void ShowToast(string message, bool success)
+        private async Task ShowToast(string message, bool success)
         {
             _toastMessage = message;
             _toastSuccess = success;
 
-            Task.Delay(3000).ContinueWith(_ =>
-            {
-                _toastMessage = null;
-                InvokeAsync(StateHasChanged);
-            });
-        }
+            await InvokeAsync(StateHasChanged);
 
-        private void ShowSuccessAnimation()
-        {
-            _showSuccessAnimation = true;
+            await Task.Delay(3000);
 
-            Task.Delay(1500).ContinueWith(_ =>
-            {
-                _showSuccessAnimation = false;
-                InvokeAsync(StateHasChanged);
-            });
+            _toastMessage = null;
+
+            await InvokeAsync(StateHasChanged);
         }
 
         private async Task HandleInvalidSubmit()

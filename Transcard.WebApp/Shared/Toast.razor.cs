@@ -19,25 +19,16 @@ namespace Transcard.WebApp.Shared
 
         private async void Show(string message, string type)
         {
-            _cts?.Cancel();
-            _cts = new CancellationTokenSource();
-
             Message = message;
             ToastType = type;
             IsVisible = true;
-
             StateHasChanged();
 
-            try
+            _ = Task.Delay(3000).ContinueWith(_ =>
             {
-                await Task.Delay(5000, _cts.Token);
                 IsVisible = false;
-                await InvokeAsync(StateHasChanged);
-            }
-            catch (TaskCanceledException)
-            {
-                // ignore
-            }
+                InvokeAsync(StateHasChanged);
+            });
         }
 
         private void Hide()

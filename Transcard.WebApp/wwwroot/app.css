@@ -132,3 +132,23 @@ body {
         font-size: 1.1rem;
     }
 }
+
+/* Mobile overlay menu */
+@media (max-width: 991px) {
+    .mobile-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 250px;
+        height: 100%;
+        background: white;
+        box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        padding: 2rem 1rem;
+        transition: right 0.3s ease;
+        z-index: 1050;
+    }
+
+        .mobile-menu.show {
+            right: 0;
+        }
+}

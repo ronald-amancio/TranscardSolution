@@ -17,16 +17,21 @@
             </a>
 
             <!-- Toggle button for mobile -->
-            <button class="navbar-toggler"
+            @* <button class="navbar-toggler"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarContent">
                 <span class="navbar-toggler-icon"></span>
-            </button>
+            </button> *@
+            @* <button class="navbar-toggler"
+                    @onclick="ToggleMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button> *@
 
             <!-- Collapsible Content -->
-            <div class="collapse navbar-collapse justify-content-end"
-                 id="navbarContent">
+            @* <div class="collapse navbar-collapse justify-content-end"
+                 id="navbarContent"> *@
+            <div class="@MenuCss">
 
                 <AuthorizeView Context="authState">
 
@@ -64,6 +69,44 @@
             @Body
         </div>
     </main>
+
+    <!-- Session Warning -->
+    @if (_showSessionWarning)
+    {
+        <div class="modal fade show d-block"
+             style="background: rgba(0,0,0,0.5);">
+
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title text-warning">
+                            Session Expiring
+                        </h5>
+                    </div>
+
+                    <div class="modal-body">
+                        You have been inactive.
+                        Your session will expire in 1 minute.
+                        Do you want to continue?
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary"
+                                @onclick="LogoutNow">
+                            No
+                        </button>
+
+                        <button class="btn btn-primary"
+                                @onclick="ContinueSession">
+                            Yes, Continue
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
 
     <!-- Footer -->
     <footer class="bg-white border-top text-center py-3 small text-muted">

@@ -1,24 +1,54 @@
 ﻿@page "/login"
 
-<h3>Login</h3>
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
 
-<form method="post" action="/auth/login" class="card p-4">
-    <div class="mb-3">
-        <label>Username</label>
-        <input name="Username" class="form-control" />
+    <div class="col-12 col-sm-10 col-md-6 col-lg-4">
+
+        <div class="card shadow-lg border-0">
+            <div class="card-body p-4">
+
+                <div class="text-center mb-4">
+                    <h4 class="fw-bold">Welcome Back</h4>
+                    <p class="text-muted small">Please sign in to continue</p>
+                </div>
+
+                <form method="post" action="/auth/login">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Username</label>
+                        <input name="Username"
+                               class="form-control form-control-lg"
+                               autocomplete="username"
+                               required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Password</label>
+                        <input name="Password"
+                               type="password"
+                               class="form-control form-control-lg"
+                               autocomplete="current-password"
+                               required />
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit"
+                                class="btn btn-primary btn-lg">
+                            Login
+                        </button>
+                    </div>
+
+                </form>
+
+                @if (_error != null)
+                {
+                    <div class="alert alert-danger mt-3">
+                        @_error
+                    </div>
+                }
+
+            </div>
+        </div>
+
     </div>
-
-    <div class="mb-3">
-        <label>Password</label>
-        <input name="Password" type="password" class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">
-        Login
-    </button>
-</form>
-
-@if (_error != null)
-{
-    <div class="alert alert-danger mt-3">@_error</div>
-}
+</div>
