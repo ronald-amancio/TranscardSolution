@@ -210,6 +210,10 @@ dotnet run
 cd src/Transcard.WebApp
 dotnet run
 
+Login Details
+username: admin
+password: admin
+
 ---
 
 ## 🔒 Environment & Secrets
